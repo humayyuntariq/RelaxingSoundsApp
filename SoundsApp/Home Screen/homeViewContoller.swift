@@ -7,13 +7,14 @@
 
 import UIKit
 
-class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout  {
-
+class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate {
     
     
     //MARK: Declaring the Outlets
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
+    
+    @IBOutlet weak var playerBar: UIVisualEffectView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +39,12 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         collectionView.collectionViewLayout = layout
         
         //table view settings
+        tableView.delegate = self
+        tableView.delegate = self
+        
+        //player bar settings
+        playerBar.layer.cornerRadius = 10
+        playerBar.clipsToBounds = true
         
     }
     
@@ -46,7 +53,44 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     }
     
     //MARK: Table View Data Source and Delegate Methods
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 6
+    }
+
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "recentCell", for: indexPath) as! recentCellModel
+        
+        cell.soundName.text = "Rain and Thunder"
+        
+        //cell settings
+        cell.layer.cornerRadius = 10
+        cell.layer.masksToBounds = true
+        cell.layer.borderWidth = 1
+        cell.layer.borderColor = UIColor.white.withAlphaComponent(0.8).cgColor // Adjust alpha for transparency
+        cell.backgroundColor = .clear
+
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+           return 12 // spacing
+       }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let spacer = UIView()
+        spacer.backgroundColor = .clear // or your background color
+        return spacer
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 49 // or whatever height you want
+    }
     
     
     
@@ -66,7 +110,6 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         
         cell.layer.cornerRadius = 20
         cell.layer.masksToBounds = true
-        cell.backgroundColor = UIColor.gray.withAlphaComponent(0.5) // Adjust alpha for transparency
         
         return cell
     }

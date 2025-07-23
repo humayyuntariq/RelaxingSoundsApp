@@ -5,7 +5,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -116,36 +115,37 @@
                                             <rect key="frame" x="0.0" y="0.0" width="361" height="46"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcc-cc-0wU">
-                                                    <rect key="frame" x="14" y="11" width="46" height="24"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IeE-hj-KoI">
-                                                    <rect key="frame" x="301" y="5.6666666666666679" width="50" height="35"/>
+                                                    <rect key="frame" x="296.66666666666669" y="0.66666666666666785" width="63.333333333333314" height="45"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain">
-                                                        <imageReference key="image" image="play.circle.fill" catalog="system" renderingMode="hierarchical-single">
+                                                        <imageReference key="image" image="play.circle.fill" catalog="system" renderingMode="hierarchical">
                                                             <hierarchicalColors>
-                                                                <color red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <color systemColor="secondaryLabelColor"/>
-                                                                <color systemColor="tertiaryLabelColor"/>
+                                                                <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <color white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             </hierarchicalColors>
                                                         </imageReference>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="26"/>
                                                     </buttonConfiguration>
                                                     <connections>
                                                         <action selector="playBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zTD-1m-uA5"/>
                                                     </connections>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcc-cc-0wU">
+                                                    <rect key="frame" x="14" y="11" width="46" height="24"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="backgroundColor" red="0.85098039215686272" green="0.85098039215686272" blue="0.85098039215686272" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
-                                                <constraint firstItem="IeE-hj-KoI" firstAttribute="centerY" secondItem="OvH-d4-VPq" secondAttribute="centerY" id="RH8-76-Xeg"/>
-                                                <constraint firstAttribute="trailing" secondItem="IeE-hj-KoI" secondAttribute="trailing" constant="10" id="Z7v-e9-HqB"/>
-                                                <constraint firstItem="bcc-cc-0wU" firstAttribute="top" secondItem="OvH-d4-VPq" secondAttribute="top" constant="11" id="azx-yV-N6L"/>
-                                                <constraint firstItem="bcc-cc-0wU" firstAttribute="leading" secondItem="OvH-d4-VPq" secondAttribute="leading" constant="14" id="cPg-If-haH"/>
-                                                <constraint firstAttribute="bottom" secondItem="bcc-cc-0wU" secondAttribute="bottom" constant="11" id="euo-JJ-x3y"/>
+                                                <constraint firstAttribute="bottom" secondItem="bcc-cc-0wU" secondAttribute="bottom" constant="11" id="54G-4W-fHW"/>
+                                                <constraint firstItem="bcc-cc-0wU" firstAttribute="leading" secondItem="OvH-d4-VPq" secondAttribute="leading" constant="14" id="aBu-os-Wfm"/>
+                                                <constraint firstItem="IeE-hj-KoI" firstAttribute="centerY" secondItem="OvH-d4-VPq" secondAttribute="centerY" id="jgh-jx-IJs"/>
+                                                <constraint firstAttribute="trailing" secondItem="IeE-hj-KoI" secondAttribute="trailing" constant="1" id="sfM-Ud-veE"/>
+                                                <constraint firstItem="bcc-cc-0wU" firstAttribute="top" secondItem="OvH-d4-VPq" secondAttribute="top" constant="11" id="u9c-fW-bmm"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -153,16 +153,34 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="pv3-nW-ZSP"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="Cpq-ph-3hk"/>
+                                </connections>
                             </tableView>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SUh-s9-v5q">
+                                <rect key="frame" x="16" y="677" width="361" height="145"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="llp-oH-vrh">
+                                    <rect key="frame" x="0.0" y="0.0" width="361" height="145"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="145" id="sbj-i0-7g7"/>
+                                </constraints>
+                                <blurEffect style="systemUltraThinMaterial"/>
+                            </visualEffectView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="SUh-s9-v5q" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="1Kg-sh-Bv7"/>
                             <constraint firstItem="vlK-EQ-c7d" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="71" id="2AF-LR-XRx"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="SUh-s9-v5q" secondAttribute="trailing" constant="16" id="4Jm-9c-anD"/>
                             <constraint firstItem="WZo-aY-MHh" firstAttribute="top" secondItem="Om3-F5-I4I" secondAttribute="bottom" constant="26" id="7Hs-X8-NCw"/>
                             <constraint firstItem="lHw-U1-jeE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="7XJ-m6-WkZ"/>
                             <constraint firstItem="FZH-qj-iRh" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="24" id="8z3-lX-O5m"/>
                             <constraint firstAttribute="bottom" secondItem="lHw-U1-jeE" secondAttribute="bottom" id="BTd-oN-Kh3"/>
+                            <constraint firstAttribute="bottom" secondItem="SUh-s9-v5q" secondAttribute="bottom" constant="30" id="UWf-cC-Rc0"/>
                             <constraint firstItem="Om3-F5-I4I" firstAttribute="top" secondItem="FZH-qj-iRh" secondAttribute="bottom" constant="7" id="WSN-A8-5Q4"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Om3-F5-I4I" secondAttribute="trailing" id="ZT8-Sv-gpx"/>
                             <constraint firstItem="vlK-EQ-c7d" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="30" id="fhh-Zw-6cI"/>
@@ -175,6 +193,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="Om3-F5-I4I" id="XEt-OF-xd6"/>
+                        <outlet property="playerBar" destination="SUh-s9-v5q" id="VcN-ot-ESj"/>
                         <outlet property="tableView" destination="lHw-U1-jeE" id="lyj-90-eIw"/>
                     </connections>
                 </viewController>
@@ -186,11 +205,5 @@
     <resources>
         <image name="forest01" width="3264" height="4896"/>
         <image name="play.circle.fill" catalog="system" width="128" height="123"/>
-        <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
     </resources>
 </document>
