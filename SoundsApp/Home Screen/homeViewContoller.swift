@@ -66,6 +66,10 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     @IBAction func playBtn(_ sender: Any) {
     }
     
+    @IBAction func progressBarAction(_ sender: Any) {
+    }
+    
+    
     //MARK: Table View Data Source and Delegate Methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
