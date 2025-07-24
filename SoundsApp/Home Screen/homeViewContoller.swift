@@ -14,11 +14,21 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var playBtnInPlayer: UIButton!
     @IBOutlet weak var playerBar: UIVisualEffectView!
+    @IBOutlet weak var endTime: UILabel!
+    @IBOutlet weak var startTime: UILabel!
+    
+    //MARK: Player Controls
+    @IBOutlet weak var backwardBtn: UIButton!
+    @IBOutlet weak var forwardBtn: UIButton!
+    @IBOutlet weak var loopBtn: UIButton!
+    @IBOutlet weak var playingSound: UILabel!
+    @IBOutlet weak var playerImage: UIImageView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         //setting the image as background
         let backgroundImage = UIImage(named: "background01")
         let backgroundImageView = UIImageView(frame: UIScreen.main.bounds)
@@ -43,9 +53,13 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         tableView.delegate = self
         
         //player bar settings
-        playerBar.layer.cornerRadius = 10
+        playerBar.layer.cornerRadius = 20
         playerBar.clipsToBounds = true
+        playerBar.layer.borderWidth = 1
+        playerBar.layer.borderColor = UIColor.white.withAlphaComponent(1).cgColor
         
+        playerBar.backgroundColor = .clear
+        playerImage.layer.cornerRadius = 5
     }
     
     //MARK: IBA Action functions
@@ -58,7 +72,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 6
+        return 10
     }
 
     
@@ -105,7 +119,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! homeCellModel
         cell.imageView.image = UIImage(named: "forest01")
-        cell.imageView.layer.cornerRadius = 20
+        cell.imageView.layer.cornerRadius = 14
         cell.titleLabel.text = "Forest"
         
         cell.layer.cornerRadius = 20
@@ -116,11 +130,11 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                                 sizeForItemAt indexPath: IndexPath) -> CGSize {
-                return CGSize(width: 187, height: 145)
+                return CGSize(width: 145, height: 145)
 
             }
     
-    
+
     
 }
 
