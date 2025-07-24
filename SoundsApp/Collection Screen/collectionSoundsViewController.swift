@@ -29,8 +29,8 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
     
     @IBOutlet weak var tableView: UITableView!
     
-    let headingPassed: String?
-    let selectedImage = UIImage(named: "ocean")
+    var headingPassed: String?
+    var selectedImage: UIImage?
     //MARK: viewDidload function
     override func viewDidLoad() {
         super.viewDidLoad()

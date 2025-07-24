@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 
-class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate {
+class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate, UIViewControllerTransitioningDelegate {
     
     
     //MARK: Declaring the Outlets
@@ -29,6 +29,8 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     @IBOutlet weak var playerImage: UIImageView!
     
     var collectionSaved: [MyCollection] = []
+    var selectedCellImageView: UIImageView?
+    var selectedCellLabel: UILabel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,6 +70,9 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         preloadSoundCollections(context: context)
         fetchSoundCollections(context: context)
+        
+        view.layoutIfNeeded()
+
         
     }
     
@@ -149,6 +154,32 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
 
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! homeCellModel
+               selectedCellImageView = cell.imageView
+               selectedCellLabel = cell.titleLabel
+
+               let storyboard = UIStoryboard(name: "Main", bundle: nil)
+               let vc = storyboard.instantiateViewController(withIdentifier: "collectionScreen") as! collectionSoundsViewContoller
+               vc.modalPresentationStyle = .fullScreen
+               vc.transitioningDelegate = self
+               vc.headingPassed = cell.titleLabel.text
+               vc.selectedImage = cell.imageView.image
+               present(vc, animated: true, completion: nil)
+    }
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+            guard let vc = presented as? collectionSoundsViewContoller else { return nil }
+
+            let animator = CollectionTransitionAnimator()
+            animator.originImageView = selectedCellImageView
+            animator.originLabel = selectedCellLabel
+            animator.destinationImageView = vc.imageHeader
+            animator.destinationLabel = vc.heading
+
+            return animator
+        }
     
     func preloadSoundCollections(context: NSManagedObjectContext) {
         // This function will be used to preload sound collections from the database
