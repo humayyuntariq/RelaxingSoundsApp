@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import CoreData
+
 
 class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate {
     
@@ -26,7 +28,8 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     @IBOutlet weak var playingSound: UILabel!
     @IBOutlet weak var playerImage: UIImageView!
     
-    
+    var collectionSaved: [MyCollection] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
         //setting the image as background
@@ -60,6 +63,12 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         
         playerBar.backgroundColor = .clear
         playerImage.layer.cornerRadius = 5
+        
+        resetCoreDataStore()
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        preloadSoundCollections(context: context)
+        fetchSoundCollections(context: context)
+        
     }
     
     //MARK: IBA Action functions
@@ -116,15 +125,17 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     
     //MARK: Collection View Data Source and Delegate Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        6
+        return collectionSaved.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! homeCellModel
-        cell.imageView.image = UIImage(named: "forest01")
-        cell.imageView.layer.cornerRadius = 14
-        cell.titleLabel.text = "Forest"
+        let collection = collectionSaved[indexPath.item]
+        cell.titleLabel.text = collection.name
+            if let imageName = collection.imageName {
+                cell.imageView.image = UIImage(named: imageName)
+            }
         
         cell.layer.cornerRadius = 20
         cell.layer.masksToBounds = true
@@ -136,8 +147,92 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
                                 sizeForItemAt indexPath: IndexPath) -> CGSize {
                 return CGSize(width: 145, height: 145)
 
-            }
+    }
     
+    
+    func preloadSoundCollections(context: NSManagedObjectContext) {
+        // This function will be used to preload sound collections from the database
+//        let alreadyAdded = UserDefaults.standard.bool(forKey: "didPreloadCollections")
+//            guard !alreadyAdded else { return }
+        
+        let rainCollection = MyCollection(context: context)
+        rainCollection.name = "Rain & Thunder"
+        rainCollection.imageName = "rain"
+        
+        let forestCollection = MyCollection(context: context)
+        forestCollection.name = "Forest & Nature"
+        forestCollection.imageName = "forest"
+        
+        let oceanCollection = MyCollection(context: context)
+        oceanCollection.name = "Ocean & Water"
+        oceanCollection.imageName = "ocean"
+        
+        let cityCollection = MyCollection(context: context)
+        cityCollection.name = "City and Urban"
+        cityCollection.imageName = "urban"
+        
+        let meditationCollection = MyCollection(context: context)
+        meditationCollection.name = "Mindfulness"
+        meditationCollection.imageName = "mediation"
+        
+        let sleepCollection = MyCollection(context: context)
+        sleepCollection.name = "Sleep & Calm"
+        sleepCollection.imageName = "sleep"
+        
+        let focusCollection = MyCollection(context: context)
+        focusCollection.name = "Focus & Study"
+        focusCollection.imageName = "study"
+        
+        let fireCollection = MyCollection(context: context)
+        fireCollection.name = "Fire & Warmth"
+        fireCollection.imageName = "fire"
+        
+        let whiteNoiseCollection = MyCollection(context: context)
+        whiteNoiseCollection.name = "White Noise"
+        whiteNoiseCollection.imageName = "whiteNoise"
+        
+        
+        do {
+            try context.save()
+//            UserDefaults.standard.set(true, forKey: "didPreloadCollections")
+
+        } catch {
+            print("Error saving built-in sounds: \(error)")
+        }
+        
+        
+    }
+    
+    func fetchSoundCollections(context: NSManagedObjectContext) {
+        let fetchRequest: NSFetchRequest<MyCollection> = MyCollection.fetchRequest()
+
+        do {
+            collectionSaved = try context.fetch(fetchRequest)
+            collectionView.reloadData()
+        } catch {
+            print("Failed to fetch collections: \(error)")
+        }
+    }
+
+    func resetCoreDataStore() {
+        let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+        let storeCoordinator = container.persistentStoreCoordinator
+
+        for store in storeCoordinator.persistentStores {
+            do {
+                try storeCoordinator.destroyPersistentStore(at: store.url!, ofType: store.type, options: nil)
+            } catch {
+                print("Error destroying store:", error)
+            }
+        }
+
+        container.loadPersistentStores { _, error in
+            if let error = error {
+                print("Error reloading store:", error)
+            }
+        }
+    }
+
 
     
 }
