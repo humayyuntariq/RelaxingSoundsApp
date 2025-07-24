@@ -57,6 +57,14 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        animateFromTop(views: [tableView, playerBar])
+
+
+    }
+    
     
     
     
@@ -131,6 +139,18 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
 
         if let avgColor = image.averageColor(in: imageRect) {
             label.textColor = avgColor.isDarkColor ? .white : .black
+        }
+    }
+
+    func animateFromTop(views: [UIView], baseDelay: Double = 0.2, duration: Double = 0.3) {
+        for (index, view) in views.enumerated() {
+            view.transform = CGAffineTransform(translationX: 0, y: -50)
+            view.alpha = 0
+
+            UIView.animate(withDuration: duration, delay: Double(index) * baseDelay, options: [.curveEaseOut], animations: {
+                view.transform = .identity
+                view.alpha = 1
+            })
         }
     }
 

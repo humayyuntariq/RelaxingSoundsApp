@@ -17,7 +17,7 @@ class CollectionTransitionAnimator: NSObject, UIViewControllerAnimatedTransition
     var originFrame: CGRect = .zero
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.5
+        return 0.2
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {

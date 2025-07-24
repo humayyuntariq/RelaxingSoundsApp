@@ -160,7 +160,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="361" height="145"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="forest01" translatesAutoresizingMaskIntoConstraints="NO" id="079-TQ-hBL">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rain" translatesAutoresizingMaskIntoConstraints="NO" id="079-TQ-hBL">
                                             <rect key="frame" x="24" y="11" width="46" height="46"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="46" id="dZA-ir-zaR"/>
@@ -393,7 +393,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="361" height="145"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="forest01" translatesAutoresizingMaskIntoConstraints="NO" id="zei-xv-RAy">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rain" translatesAutoresizingMaskIntoConstraints="NO" id="zei-xv-RAy">
                                             <rect key="frame" x="24" y="11" width="46" height="46"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="46" id="X6U-xL-eih"/>
@@ -584,6 +584,7 @@
         <image name="forward.end" catalog="system" width="128" height="112"/>
         <image name="ocean" width="1125.3333740234375" height="2000"/>
         <image name="play.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="rain" width="1042.3333740234375" height="1563.6666259765625"/>
         <image name="repeat.1" catalog="system" width="128" height="100"/>
     </resources>
 </document>
