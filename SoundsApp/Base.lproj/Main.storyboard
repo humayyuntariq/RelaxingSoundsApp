@@ -125,7 +125,7 @@
                                                         <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="26"/>
                                                     </buttonConfiguration>
                                                     <connections>
-                                                        <action selector="playBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zTD-1m-uA5"/>
+                                                        <action selector="playBtn:" destination="2up-I6-4uW" eventType="touchUpInside" id="JA1-Q0-lxq"/>
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcc-cc-0wU">
@@ -145,6 +145,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="playButton" destination="IeE-hj-KoI" id="C8X-Eb-Nsp"/>
                                             <outlet property="soundName" destination="bcc-cc-0wU" id="JY0-qL-IeV"/>
                                         </connections>
                                     </tableViewCell>
@@ -339,11 +340,11 @@
                                             <subviews>
                                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b1N-Dr-AZc">
                                                     <rect key="frame" x="0.0" y="0.0" width="361" height="46"/>
-                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.5" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="nux-Gw-8Uw">
+                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="nux-Gw-8Uw">
                                                         <rect key="frame" x="0.0" y="0.0" width="361" height="46"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     </view>
-                                                    <blurEffect style="regular"/>
+                                                    <blurEffect style="systemUltraThinMaterial"/>
                                                 </visualEffectView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Xi-zg-Iw8">
                                                     <rect key="frame" x="296.66666666666669" y="0.66666666666666785" width="63.333333333333314" height="45"/>
@@ -354,7 +355,7 @@
                                                         <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="26"/>
                                                     </buttonConfiguration>
                                                     <connections>
-                                                        <action selector="playBtn:" destination="Mfj-mf-X2n" eventType="touchUpInside" id="0En-Xe-Etq"/>
+                                                        <action selector="playBtn:" destination="DIS-pj-DxH" eventType="touchUpInside" id="Po5-cC-vQX"/>
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NAE-If-VdE">
@@ -378,6 +379,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="playButton" destination="2Xi-zg-Iw8" id="8Lv-hd-AaV"/>
                                             <outlet property="soundName" destination="NAE-If-VdE" id="Jgf-O2-dIY"/>
                                         </connections>
                                     </tableViewCell>
@@ -428,6 +430,9 @@
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="32"/>
                                                 </preferredSymbolConfiguration>
                                             </buttonConfiguration>
+                                            <connections>
+                                                <action selector="playBtn:" destination="Mfj-mf-X2n" eventType="touchUpInside" id="Hig-Eb-485"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bfb-FR-APo">
                                             <rect key="frame" x="232" y="101" width="18" height="18"/>
@@ -537,6 +542,7 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="i5M-Nc-8Pd"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="5TE-H9-cJN" firstAttribute="top" secondItem="cRX-Sx-Y6u" secondAttribute="bottom" constant="35.666666666666671" id="8ys-bU-SQI"/>
                             <constraint firstItem="5TE-H9-cJN" firstAttribute="leading" secondItem="i5M-Nc-8Pd" secondAttribute="leading" constant="16" id="JTT-Ub-qf7"/>

@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "simon-berger-oEdmks2U7nI-unsplash.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -9,7 +10,6 @@
       "scale" : "2x"
     },
     {
-      "filename" : "degleex-ganzorig-wQImoykAwGs-unsplash.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -77,9 +77,6 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     }
     
     //MARK: IBA Action functions
-    @IBAction func playBtn(_ sender: Any) {
-    }
-    
     @IBAction func progressBarAction(_ sender: Any) {
     }
     
@@ -166,6 +163,8 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
                vc.transitioningDelegate = self
                vc.headingPassed = cell.titleLabel.text
                vc.selectedImage = cell.imageView.image
+            let selectedCollection = collectionSaved[indexPath.item] // ← Your array of `MyCollection`
+            vc.collectionObject = selectedCollection
                present(vc, animated: true, completion: nil)
     }
     
@@ -222,6 +221,26 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         whiteNoiseCollection.name = "White Noise"
         whiteNoiseCollection.imageName = "whiteNoise"
         
+        let water01 = MySound(context: context)
+        water01.name = "Flowing Water"
+        water01.fileName = "flowingWater"
+        water01.collectionTo = oceanCollection
+        
+        let water02 = MySound(context: context)
+        water02.name = "River"
+        water02.fileName = "River"
+        water02.collectionTo = oceanCollection
+        
+        let water03 = MySound(context: context)
+        water03.name = "Water Stream 01"
+        water03.fileName = "waterStream01"
+        water03.collectionTo = oceanCollection
+        
+        let water04 = MySound(context: context)
+        water04.name = "Water Stream 02"
+        water04.fileName = "waterStream02"
+        water04.collectionTo = oceanCollection
+        
         
         do {
             try context.save()
@@ -264,7 +283,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         }
     }
 
-
-    
 }
+
+
 

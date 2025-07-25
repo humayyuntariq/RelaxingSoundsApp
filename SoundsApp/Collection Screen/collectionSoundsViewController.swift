@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import CoreData
+import AVFoundation
 
 class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -31,6 +33,15 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
     
     var headingPassed: String?
     var selectedImage: UIImage?
+    
+    var collectionObject: MyCollection?
+    var sounds: [MySound] = []
+
+    var audioPlayer: AVAudioPlayer?
+    var currentlyPlayingIndex: IndexPath?
+    var playbackTimer: Timer?
+
+    
     //MARK: viewDidload function
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +49,6 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
         //setting the imag as background
     
         imageHeader.image = selectedImage
-        updateLabelColorBasedOnImage(selectedImage!, label: heading)
         
         //table view settings
         tableView.delegate = self
@@ -50,21 +60,48 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
         
         playerBar.layer.cornerRadius = 20
         playerBar.clipsToBounds = true
+        playerBar.layer.borderWidth = 1
+        playerBar.layer.borderColor = UIColor.white.cgColor
+        
+        playerImage.layer.cornerRadius = 5
+        playerImage.clipsToBounds = true
         
         //setting the heading
         heading.text = headingPassed ?? ""
 
-        
+        if let collection = collectionObject {
+
+            if let soundSet = collection.sounds {
+                if let soundArray = soundSet.allObjects as? [MySound] {
+                    sounds = soundArray.sorted { $0.name ?? "" < $1.name ?? "" }
+                }
+            }
+        }
+
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        animateFromTop(views: [tableView, playerBar])
+        animateFromTop(views: [tableView,playerBar])
 
 
     }
-    
+
+    @IBAction func playBtn(_ sender: Any) {
+        guard let player = audioPlayer else { return }
+        if player.isPlaying {
+            player.pause()
+            playBtnInPlayer.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
+            stopPlaybackTimer()
+        } else {
+            player.play()
+            playBtnInPlayer.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+            startPlaybackTimer()
+        }
+        
+    }
     
     
     
@@ -77,38 +114,47 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
         present(vc, animated: true, completion: nil)
     }
     
-    @IBAction func progressBarAction(_ sender: Any) {
+    @IBAction func progressBarAction(_ sender: UISlider) {
+        if let player = audioPlayer {
+                let newTime = TimeInterval(sender.value) * player.duration
+                player.currentTime = newTime
+            }
+        
     }
     
     
     
     
     //MARK: Table View Data Source and Delegate Methods
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sounds.count
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 10
-    }
 
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "recentCell", for: indexPath) as! recentCellModel
+
+        let sound = sounds[indexPath.section]
+        cell.soundName.text = sound.name ?? "Unnamed"
         
-        cell.soundName.text = "Rain and Thunder"
-        updateLabelColorBasedOnImage(selectedImage!, label: cell.soundName)
-        
-        //cell settings
+        cell.playButton.tag = indexPath.section
+        cell.playButton.setImage(UIImage(systemName: indexPath == currentlyPlayingIndex && audioPlayer?.isPlaying == true ? "pause.circle.fill" : "play.circle.fill"), for: .normal)
+        cell.playButton.addTarget(self, action: #selector(handlePlayPause(_:)), for: .touchUpInside)
+
+
+        // cell design
         cell.layer.cornerRadius = 10
         cell.layer.masksToBounds = true
         cell.layer.borderWidth = 1
-        cell.layer.borderColor = UIColor.white.withAlphaComponent(0.8).cgColor // Adjust alpha for transparency
+        cell.layer.borderColor = UIColor.white.withAlphaComponent(0.8).cgColor
         cell.backgroundColor = .clear
 
         return cell
     }
+
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
            return 12 // spacing
@@ -123,26 +169,8 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 49 // or whatever height you want
     }
-    
-    func updateLabelColorBasedOnImage(_ image: UIImage, label: UILabel) {
-        // Convert label frame to image coordinates
-        guard let window = label.window else { return }
-        let labelFrameInWindow = label.convert(label.bounds, to: window)
-        let scale = image.scale
-        
-        let imageRect = CGRect(
-            x: labelFrameInWindow.origin.x * scale,
-            y: labelFrameInWindow.origin.y * scale,
-            width: labelFrameInWindow.width * scale,
-            height: labelFrameInWindow.height * scale
-        )
 
-        if let avgColor = image.averageColor(in: imageRect) {
-            label.textColor = avgColor.isDarkColor ? .white : .black
-        }
-    }
-
-    func animateFromTop(views: [UIView], baseDelay: Double = 0.2, duration: Double = 0.3) {
+    func animateFromTop(views: [UIView], baseDelay: Double = 0.2, duration: Double = 0.1) {
         for (index, view) in views.enumerated() {
             view.transform = CGAffineTransform(translationX: 0, y: -50)
             view.alpha = 0
@@ -153,50 +181,88 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
             })
         }
     }
+    
+    @objc func handlePlayPause(_ sender: UIButton) {
+        let section = sender.tag
+        let indexPath = IndexPath(row: 0, section: section)
+        let sound = sounds[section]
+
+        if indexPath == currentlyPlayingIndex, let player = audioPlayer {
+            if player.isPlaying {
+                player.pause()
+                sender.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
+                playBtnInPlayer.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
+                stopPlaybackTimer()
+            } else {
+                player.play()
+                sender.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+                playBtnInPlayer.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+                startPlaybackTimer()
+            }
+            return
+        }
+
+        // If a different sound is selected
+        audioPlayer?.stop()
+        stopPlaybackTimer()
+
+        guard let fileName = sound.fileName,
+              let url = Bundle.main.url(forResource: fileName.replacingOccurrences(of: ".mp3", with: ""), withExtension: "mp3") else {
+            print("❌ File not found:", sound.fileName ?? "nil")
+            return
+        }
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.play()
+            currentlyPlayingIndex = indexPath
+
+            updatePlayerBar(for: sound)
+            playBtnInPlayer.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+            startPlaybackTimer()
+
+            tableView.reloadData()
+
+        } catch {
+            print("Error playing sound: \(error.localizedDescription)")
+        }
+    }
+
+
+    func updatePlayerBar(for sound: MySound) {
+        playingSound.text = sound.name
+        playerImage.image = selectedImage
+        endTime.text = formatTime(audioPlayer?.duration ?? 0)
+        startTime.text = "0:00"
+        progressBar.value = 0
+    }
+
+    func startPlaybackTimer() {
+        playbackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            guard let player = self.audioPlayer else { return }
+            self.progressBar.value = Float(player.currentTime / player.duration)
+            self.startTime.text = self.formatTime(player.currentTime)
+        }
+    }
+
+    func stopPlaybackTimer() {
+        playbackTimer?.invalidate()
+        playbackTimer = nil
+    }
+
+    func formatTime(_ time: TimeInterval) -> String {
+        let minutes = Int(time) / 60
+        let seconds = Int(time) % 60
+        return String(format: "%d:%02d", minutes, seconds)
+    }
+
 
     
+  
 }
 
 
-extension UIImage {
-    func averageColor(in rect: CGRect) -> UIColor? {
-        guard let cgImage = self.cgImage?.cropping(to: rect) else { return nil }
-
-        let ciImage = CIImage(cgImage: cgImage)
-        let extentVector = CIVector(x: 0, y: 0, z: rect.width, w: rect.height)
-        
-        let filter = CIFilter(name: "CIAreaAverage", parameters: [
-            kCIInputImageKey: ciImage,
-            kCIInputExtentKey: extentVector
-        ])
-        
-        guard let outputImage = filter?.outputImage else { return nil }
-
-        var bitmap = [UInt8](repeating: 0, count: 4)
-        let context = CIContext()
-
-        context.render(outputImage,
-                       toBitmap: &bitmap,
-                       rowBytes: 4,
-                       bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
-                       format: .RGBA8,
-                       colorSpace: CGColorSpaceCreateDeviceRGB())
-
-        return UIColor(red: CGFloat(bitmap[0]) / 255,
-                       green: CGFloat(bitmap[1]) / 255,
-                       blue: CGFloat(bitmap[2]) / 255,
-                       alpha: 1)
-    }
-}
-
-extension UIColor {
-    var isDarkColor: Bool {
-        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        getRed(&r, green: &g, blue: &b, alpha: &a)
-        let brightness = (r * 299 + g * 587 + b * 114) / 1000
-        return brightness < 0.5
-    }
-}
 
 
 

@@ -3,7 +3,7 @@
     <entity name="MyCollection" representedClassName="MyCollection" syncable="YES">
         <attribute name="imageName" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="sounds" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MySound" inverseName="collectionTo" inverseEntity="MySound"/>
+        <relationship name="sounds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MySound" inverseName="collectionTo" inverseEntity="MySound"/>
     </entity>
     <entity name="MySound" representedClassName="MySound" syncable="YES">
         <attribute name="fileName" optional="YES" attributeType="String"/>

@@ -2,7 +2,7 @@
 //  MySound+CoreDataProperties.swift
 //  SoundsApp
 //
-//  Created by Humayun Tariq on 24/07/2025.
+//  Created by Humayun Tariq on 25/07/2025.
 //
 //
 
@@ -16,9 +16,9 @@ extension MySound {
         return NSFetchRequest<MySound>(entityName: "MySound")
     }
 
-    @NSManaged public var name: String?
     @NSManaged public var fileName: String?
     @NSManaged public var lastPlayed: Date?
+    @NSManaged public var name: String?
     @NSManaged public var collectionTo: MyCollection?
 
 }
