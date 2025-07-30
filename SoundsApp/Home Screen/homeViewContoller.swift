@@ -16,16 +16,16 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     
+    //MARK: Player Controls
     @IBOutlet weak var playBtnInPlayer: UIButton!
     @IBOutlet weak var playerBar: UIVisualEffectView!
     @IBOutlet weak var endTime: UILabel!
     @IBOutlet weak var startTime: UILabel!
-    
-    //MARK: Player Controls
     @IBOutlet weak var backwardBtn: UIButton!
     @IBOutlet weak var forwardBtn: UIButton!
     @IBOutlet weak var loopBtn: UIButton!
     @IBOutlet weak var playingSound: UILabel!
+    @IBOutlet weak var progressBar: UISlider!
     @IBOutlet weak var playerImage: UIImageView!
     
     var collectionSaved: [MyCollection] = []
@@ -76,10 +76,31 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMiniPlayer), name: .PlaybackStateDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMiniPlayerProgress), name: .PlaybackProgressDidChange, object: nil)
+
+        updateMiniPlayer() // Call this to restore state
+    }
+
+
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .PlaybackStateDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .PlaybackProgressDidChange, object: nil)
+    }
+
+    
+    
     //MARK: IBA Action functions
     @IBAction func progressBarAction(_ sender: Any) {
     }
     
+    @IBAction func playBtn(_ sender: Any) {
+        PlaybackState.shared.togglePlayPause()
+    }
     
     //MARK: Table View Data Source and Delegate Methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -180,10 +201,11 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
             return animator
         }
     
+    // MARK: Saving Data into CoreData
     func preloadSoundCollections(context: NSManagedObjectContext) {
         // This function will be used to preload sound collections from the database
-//        let alreadyAdded = UserDefaults.standard.bool(forKey: "didPreloadCollections")
-//            guard !alreadyAdded else { return }
+        let alreadyAdded = UserDefaults.standard.bool(forKey: "didPreloadCollections")
+            guard !alreadyAdded else { return }
         
         let rainCollection = MyCollection(context: context)
         rainCollection.name = "Rain & Thunder"
@@ -244,7 +266,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         
         do {
             try context.save()
-//            UserDefaults.standard.set(true, forKey: "didPreloadCollections")
+       UserDefaults.standard.set(true, forKey: "didPreloadCollections")
 
         } catch {
             print("Error saving built-in sounds: \(error)")
@@ -282,6 +304,44 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
             }
         }
     }
+    
+    @objc func updateMiniPlayer() {
+        let state = PlaybackState.shared
+
+        if let sound = state.currentSound {
+            playingSound.text = sound.name
+        } else {
+            playingSound.text = "No Sound"
+        }
+
+        playerImage.image = state.currentImage
+        playBtnInPlayer.setImage(UIImage(systemName: state.isPlaying ? "pause.circle.fill" : "play.circle.fill"), for: .normal)
+
+        if let player = state.audioPlayer {
+            endTime.text = formatTime(player.duration)
+            startTime.text = formatTime(player.currentTime)
+            progressBar.value = Float(player.currentTime / player.duration)
+        } else {
+            progressBar.value = 0
+            startTime.text = "0:00"
+            endTime.text = "0:00"
+        }
+    }
+
+
+    @objc func updateMiniPlayerProgress() {
+        guard let player = PlaybackState.shared.audioPlayer else { return }
+        startTime.text = formatTime(player.currentTime)
+        progressBar.value = Float(player.currentTime / player.duration)
+    }
+
+    
+    func formatTime(_ time: TimeInterval) -> String {
+        let minutes = Int(time) / 60
+        let seconds = Int(time) % 60
+        return String(format: "%d:%02d", minutes, seconds)
+    }
+
 
 }
 

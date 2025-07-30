@@ -88,19 +88,24 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
 
 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMiniPlayer), name: .PlaybackStateDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMiniPlayerProgress), name: .PlaybackProgressDidChange, object: nil)
+        updateMiniPlayer()
+    }
+
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .PlaybackStateDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .PlaybackProgressDidChange, object: nil)
+    }
+
 
     @IBAction func playBtn(_ sender: Any) {
-        guard let player = audioPlayer else { return }
-        if player.isPlaying {
-            player.pause()
-            playBtnInPlayer.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
-            stopPlaybackTimer()
-        } else {
-            player.play()
-            playBtnInPlayer.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
-            startPlaybackTimer()
-        }
-        
+        PlaybackState.shared.togglePlayPause()
     }
     
     
@@ -140,12 +145,17 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
         let sound = sounds[indexPath.section]
         cell.soundName.text = sound.name ?? "Unnamed"
         
+        // Sync with shared player
+        let isCurrent = (PlaybackState.shared.currentSound == sound)
+        let isPlaying = PlaybackState.shared.isPlaying && isCurrent
+        let iconName = isPlaying ? "pause.circle.fill" : "play.circle.fill"
+        cell.playButton.setImage(UIImage(systemName: iconName), for: .normal)
+        
         cell.playButton.tag = indexPath.section
-        cell.playButton.setImage(UIImage(systemName: indexPath == currentlyPlayingIndex && audioPlayer?.isPlaying == true ? "pause.circle.fill" : "play.circle.fill"), for: .normal)
+        cell.playButton.removeTarget(nil, action: nil, for: .allEvents) // Avoid duplication
         cell.playButton.addTarget(self, action: #selector(handlePlayPause(_:)), for: .touchUpInside)
 
-
-        // cell design
+        // Cell UI
         cell.layer.cornerRadius = 10
         cell.layer.masksToBounds = true
         cell.layer.borderWidth = 1
@@ -183,50 +193,8 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
     }
     
     @objc func handlePlayPause(_ sender: UIButton) {
-        let section = sender.tag
-        let indexPath = IndexPath(row: 0, section: section)
-        let sound = sounds[section]
-
-        if indexPath == currentlyPlayingIndex, let player = audioPlayer {
-            if player.isPlaying {
-                player.pause()
-                sender.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
-                playBtnInPlayer.setImage(UIImage(systemName: "play.circle.fill"), for: .normal)
-                stopPlaybackTimer()
-            } else {
-                player.play()
-                sender.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
-                playBtnInPlayer.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
-                startPlaybackTimer()
-            }
-            return
-        }
-
-        // If a different sound is selected
-        audioPlayer?.stop()
-        stopPlaybackTimer()
-
-        guard let fileName = sound.fileName,
-              let url = Bundle.main.url(forResource: fileName.replacingOccurrences(of: ".mp3", with: ""), withExtension: "mp3") else {
-            print("❌ File not found:", sound.fileName ?? "nil")
-            return
-        }
-
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.play()
-            currentlyPlayingIndex = indexPath
-
-            updatePlayerBar(for: sound)
-            playBtnInPlayer.setImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
-            startPlaybackTimer()
-
-            tableView.reloadData()
-
-        } catch {
-            print("Error playing sound: \(error.localizedDescription)")
-        }
+        let sound = sounds[sender.tag]
+            PlaybackState.shared.play(sound: sound, image: selectedImage)
     }
 
 
@@ -258,7 +226,30 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
     }
 
 
-    
+    @objc func updateMiniPlayer() {
+        let state = PlaybackState.shared
+        playingSound.text = state.currentSound?.name ?? "No Sound"
+        playerImage.image = state.currentImage
+        playBtnInPlayer.setImage(UIImage(systemName: state.isPlaying ? "pause.circle.fill" : "play.circle.fill"), for: .normal)
+
+        if let player = state.audioPlayer {
+            endTime.text = formatTime(player.duration)
+            startTime.text = formatTime(player.currentTime)
+            progressBar.value = Float(player.currentTime / player.duration)
+        } else {
+            endTime.text = "0:00"
+            startTime.text = "0:00"
+            progressBar.value = 0
+        }
+    }
+
+    @objc func updateMiniPlayerProgress() {
+        guard let player = PlaybackState.shared.audioPlayer else { return }
+        startTime.text = formatTime(player.currentTime)
+        progressBar.value = Float(player.currentTime / player.duration)
+    }
+
+
   
 }
 

@@ -196,6 +196,9 @@
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="32"/>
                                                 </preferredSymbolConfiguration>
                                             </buttonConfiguration>
+                                            <connections>
+                                                <action selector="playBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4Ii-RK-cwd"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nk-zz-0gB">
                                             <rect key="frame" x="232" y="101" width="18" height="18"/>
@@ -302,6 +305,7 @@
                         <outlet property="playerBar" destination="SUh-s9-v5q" id="VcN-ot-ESj"/>
                         <outlet property="playerImage" destination="079-TQ-hBL" id="ojj-7b-Hui"/>
                         <outlet property="playingSound" destination="HVn-7x-lJw" id="Zbj-hY-lvy"/>
+                        <outlet property="progressBar" destination="gCo-3D-L7v" id="8Dj-GN-YFn"/>
                         <outlet property="startTime" destination="Vwu-92-2aY" id="laR-X1-xVk"/>
                         <outlet property="tableView" destination="lHw-U1-jeE" id="lyj-90-eIw"/>
                     </connections>
