@@ -84,7 +84,7 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        animateFromTop(views: [tableView,playerBar])
+        animateFromTop(views: [tableView])
 
 
     }
@@ -192,10 +192,6 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    @objc func handlePlayPause(_ sender: UIButton) {
-        let sound = sounds[sender.tag]
-            PlaybackState.shared.play(sound: sound, image: selectedImage)
-    }
 
 
     func updatePlayerBar(for sound: MySound) {
@@ -241,6 +237,35 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
             startTime.text = "0:00"
             progressBar.value = 0
         }
+        
+        // Update all visible cells
+        tableView.visibleCells.forEach { cell in
+            if let recentCell = cell as? recentCellModel,
+               let indexPath = tableView.indexPath(for: cell) {
+                let sound = sounds[indexPath.section]
+                let isCurrent = (state.currentSound == sound)
+                let isPlaying = state.isPlaying && isCurrent
+                let iconName = isPlaying ? "pause.circle.fill" : "play.circle.fill"
+                recentCell.playButton.setImage(UIImage(systemName: iconName), for: .normal)
+            }
+        }
+    }
+
+    @objc func handlePlayPause(_ sender: UIButton) {
+        let sound = sounds[sender.tag]
+        let state = PlaybackState.shared
+        
+        if state.currentSound == sound {
+            // Toggle play/pause for current sound
+            state.togglePlayPause()
+        } else {
+            // Play new sound
+            state.play(sound: sound, image: selectedImage)
+        }
+        
+        // Update button state immediately
+        let isPlaying = (state.currentSound == sound) && state.isPlaying
+        sender.setImage(UIImage(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill"), for: .normal)
     }
 
     @objc func updateMiniPlayerProgress() {

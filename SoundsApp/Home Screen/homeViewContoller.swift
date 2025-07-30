@@ -66,7 +66,6 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         playerBar.backgroundColor = .clear
         playerImage.layer.cornerRadius = 5
         
-        resetCoreDataStore()
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         preloadSoundCollections(context: context)
         fetchSoundCollections(context: context)
