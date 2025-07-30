@@ -48,6 +48,14 @@ class PlaybackState {
             print("Playback error: \(error)")
         }
     }
+    
+    func seek(to time: TimeInterval) {
+           guard let player = audioPlayer else { return }
+           player.currentTime = min(max(0, time), player.duration)
+           notifyStateChange()
+       }
+    
+    
     func togglePlayPause() {
         if isPlaying {
             audioPlayer?.pause()

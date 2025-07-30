@@ -67,6 +67,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         playerBar.backgroundColor = .clear
         playerImage.layer.cornerRadius = 5
         
+//        resetCoreDataStore() // Reset Core Data store for testing purposes
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         preloadSoundCollections(context: context)
         fetchSoundCollections(context: context)
@@ -96,7 +97,11 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     
     
     //MARK: IBA Action functions
-    @IBAction func progressBarAction(_ sender: Any) {
+    @IBAction func progressBarAction(_ sender: UISlider) {
+        
+        guard let player = PlaybackState.shared.audioPlayer else { return }
+           let newTime = TimeInterval(sender.value) * player.duration
+           PlaybackState.shared.seek(to: newTime)
     }
     
     @IBAction func playBtn(_ sender: Any) {
@@ -224,21 +229,134 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         rainCollection.name = "Rain & Thunder"
         rainCollection.imageName = "rain"
         
+         // Add sounds to Rain & Thunder collection
+            let rain01 = MySound(context: context)
+            rain01.name = "Open Window and Rain"
+            rain01.fileName = "openWindow"
+            rain01.collectionTo = rainCollection
+        
+            let rain02 = MySound(context: context)
+            rain02.name = "Light Rain"
+            rain02.fileName = "LightRain"
+            rain02.collectionTo = rainCollection
+        
+            let rain03 = MySound(context: context)
+            rain03.name = "Rain and Light Thunder"
+            rain03.fileName = "rainLightThunder"
+            rain03.collectionTo = rainCollection
+        
+            let rain04 = MySound(context: context)
+            rain04.name = "Rain and Thunder"
+            rain04.fileName = "rainThunder"
+            rain04.collectionTo = rainCollection
+            
+        
+        
         let forestCollection = MyCollection(context: context)
         forestCollection.name = "Forest & Nature"
         forestCollection.imageName = "forest"
         
+            // Add sounds to Forest & Nature collection
+            let forest01 = MySound(context: context)
+            forest01.name = "Birds and Forest"
+            forest01.fileName = "Walkforest"
+            forest01.collectionTo = forestCollection
+        
+            let forest02 = MySound(context: context)
+            forest02.name = "Nature's Sound"
+            forest02.fileName = "NatureSound"
+            forest02.collectionTo = forestCollection
+ 
+            let forest03 = MySound(context: context)
+            forest03.name = "Walk in the Forest"
+            forest03.fileName = "ForestSounds"
+            forest03.collectionTo = forestCollection
+        
+            let forest04 = MySound(context: context)
+            forest04.name = "Forest's Ambience"
+            forest04.fileName = "forestAmbience"
+            forest04.collectionTo = forestCollection
+        
+        
+        
         let oceanCollection = MyCollection(context: context)
         oceanCollection.name = "Ocean & Water"
         oceanCollection.imageName = "ocean"
+          
+        // Add sounds to Ocean & Water collection
+            let water01 = MySound(context: context)
+            water01.name = "Flowing Water"
+            water01.fileName = "flowingWater"
+            water01.collectionTo = oceanCollection
+            
+            let water02 = MySound(context: context)
+            water02.name = "River"
+            water02.fileName = "River"
+            water02.collectionTo = oceanCollection
+            
+            let water03 = MySound(context: context)
+            water03.name = "Water Stream 01"
+            water03.fileName = "waterStream01"
+            water03.collectionTo = oceanCollection
+            
+            let water04 = MySound(context: context)
+            water04.name = "Water Stream 02"
+            water04.fileName = "waterStream02"
+            water04.collectionTo = oceanCollection
+        
         
         let cityCollection = MyCollection(context: context)
         cityCollection.name = "City and Urban"
         cityCollection.imageName = "urban"
         
+            // Add sounds to City and Urban collection
+            let city01 = MySound(context: context)
+            city01.name = "City Ambience"
+            city01.fileName = "ambience"
+            city01.collectionTo = cityCollection
+        
+            let city02 = MySound(context: context)
+            city02.name = "Traffic"
+            city02.fileName = "trafficSound"
+            city02.collectionTo = cityCollection
+        
+            let city03 = MySound(context: context)
+            city03.name = "City Night"
+            city03.fileName = "cityNight"
+            city03.collectionTo = cityCollection
+        
+            let city04 = MySound(context: context)
+            city04.name = "City Morning"
+            city04.fileName = "morning"
+            city04.collectionTo = cityCollection
+
+        
         let meditationCollection = MyCollection(context: context)
         meditationCollection.name = "Mindfulness"
         meditationCollection.imageName = "mediation"
+        
+            // Add sounds to Mindfulness collection
+            let meditation01 = MySound(context: context)
+            meditation01.name = "Meditation Music"
+            meditation01.fileName = "deepMediation"
+            meditation01.collectionTo = meditationCollection
+        
+            let meditation02 = MySound(context: context)
+            meditation02.name = "Deep Meditation Music"
+            meditation02.fileName = "mindfulness"
+            meditation02.collectionTo = meditationCollection
+        
+            let meditation03 = MySound(context: context)
+            meditation03.name = "Healing Mediation Music"
+            meditation03.fileName = "healingmediation"
+            meditation03.collectionTo = meditationCollection
+        
+            let meditation04 = MySound(context: context)
+            meditation04.name = "Meditation & Water Sounds"
+            meditation04.fileName = "mediationWater"
+            meditation04.collectionTo = meditationCollection
+        
+
         
         let sleepCollection = MyCollection(context: context)
         sleepCollection.name = "Sleep & Calm"
@@ -256,25 +374,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         whiteNoiseCollection.name = "White Noise"
         whiteNoiseCollection.imageName = "whiteNoise"
         
-        let water01 = MySound(context: context)
-        water01.name = "Flowing Water"
-        water01.fileName = "flowingWater"
-        water01.collectionTo = oceanCollection
-        
-        let water02 = MySound(context: context)
-        water02.name = "River"
-        water02.fileName = "River"
-        water02.collectionTo = oceanCollection
-        
-        let water03 = MySound(context: context)
-        water03.name = "Water Stream 01"
-        water03.fileName = "waterStream01"
-        water03.collectionTo = oceanCollection
-        
-        let water04 = MySound(context: context)
-        water04.name = "Water Stream 02"
-        water04.fileName = "waterStream02"
-        water04.collectionTo = oceanCollection
+      
         
         
         do {

@@ -120,10 +120,9 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
     }
     
     @IBAction func progressBarAction(_ sender: UISlider) {
-        if let player = audioPlayer {
-                let newTime = TimeInterval(sender.value) * player.duration
-                player.currentTime = newTime
-            }
+        guard let player = PlaybackState.shared.audioPlayer else { return }
+            let newTime = TimeInterval(sender.value) * player.duration
+            PlaybackState.shared.seek(to: newTime)
         
     }
     
