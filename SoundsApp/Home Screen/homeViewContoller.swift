@@ -31,6 +31,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     var collectionSaved: [MyCollection] = []
     var selectedCellImageView: UIImageView?
     var selectedCellLabel: UILabel?
+    private var recentSounds: [MySound] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +78,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        fetchRecentSounds()
         NotificationCenter.default.addObserver(self, selector: #selector(updateMiniPlayer), name: .PlaybackStateDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateMiniPlayerProgress), name: .PlaybackProgressDidChange, object: nil)
 
@@ -107,16 +109,28 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 10
+        return recentSounds.count
     }
 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "recentCell", for: indexPath) as! recentCellModel
+                
+                let sound = recentSounds[indexPath.section]
+                cell.soundName.text = sound.name
+                
+                // Sync with PlaybackState
+                let state = PlaybackState.shared
+                let isCurrentSound = (state.currentSound == sound)
+                let isPlaying = state.isPlaying && isCurrentSound
+                
+                cell.playButton.setImage(UIImage(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill"), for: .normal)
+                cell.playButton.tag = indexPath.section
+                cell.playButton.addTarget(self, action: #selector(handlePlayPause(_:)), for: .touchUpInside)
         
-        cell.soundName.text = "Rain and Thunder"
-        
+        cell.selectionStyle = .none
+
         //cell settings
         cell.layer.cornerRadius = 10
         cell.layer.masksToBounds = true
@@ -325,6 +339,20 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
             startTime.text = "0:00"
             endTime.text = "0:00"
         }
+        
+        tableView.visibleCells.forEach { cell in
+                   if let recentCell = cell as? recentCellModel,
+                      let indexPath = tableView.indexPath(for: cell) {
+                       let sound = recentSounds[indexPath.section]
+                       let isCurrentSound = (PlaybackState.shared.currentSound == sound)
+                       let isPlaying = PlaybackState.shared.isPlaying && isCurrentSound
+                       
+                       recentCell.playButton.setImage(
+                           UIImage(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill"),
+                           for: .normal
+                       )
+                   }
+               }
     }
 
 
@@ -340,6 +368,37 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         let seconds = Int(time) % 60
         return String(format: "%d:%02d", minutes, seconds)
     }
+
+    func fetchRecentSounds() {
+           let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+           let fetchRequest: NSFetchRequest<MySound> = MySound.fetchRequest()
+           
+           // Only fetch sounds that have been played
+           fetchRequest.predicate = NSPredicate(format: "lastPlayed != nil")
+           fetchRequest.sortDescriptors = [NSSortDescriptor(key: "lastPlayed", ascending: false)]
+           fetchRequest.fetchLimit = 10
+           
+           do {
+               recentSounds = try context.fetch(fetchRequest)
+               tableView.reloadData()
+           } catch {
+               print("Failed to fetch recent sounds: \(error)")
+           }
+       }
+    
+    @objc func handlePlayPause(_ sender: UIButton) {
+            let sound = recentSounds[sender.tag]
+            let state = PlaybackState.shared
+            
+            if state.currentSound == sound {
+                state.togglePlayPause()
+            } else {
+                // Get the collection image for this sound
+                let collectionImage = UIImage(named: sound.collectionTo?.imageName ?? "")
+                state.play(sound: sound, image: collectionImage)
+            }
+        }
+    
 
 
 }

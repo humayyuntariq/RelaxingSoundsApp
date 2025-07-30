@@ -150,6 +150,7 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
         let isPlaying = PlaybackState.shared.isPlaying && isCurrent
         let iconName = isPlaying ? "pause.circle.fill" : "play.circle.fill"
         cell.playButton.setImage(UIImage(systemName: iconName), for: .normal)
+        cell.selectionStyle = .none
         
         cell.playButton.tag = indexPath.section
         cell.playButton.removeTarget(nil, action: nil, for: .allEvents) // Avoid duplication

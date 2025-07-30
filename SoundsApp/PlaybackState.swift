@@ -26,26 +26,28 @@ class PlaybackState {
             print("Could not find sound file")
             return
         }
-        
+
         do {
             if currentSound?.fileName != sound.fileName {
-                // New sound selected
                 audioPlayer?.stop()
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
                 currentSound = sound
                 currentImage = image
+                
+                // Update lastPlayed date
+                let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+                sound.lastPlayed = Date()
+                try context.save()
             }
-            
+
             audioPlayer?.play()
             isPlaying = true
             startProgressTimer()
             notifyStateChange()
-            
         } catch {
             print("Playback error: \(error)")
         }
     }
-    
     func togglePlayPause() {
         if isPlaying {
             audioPlayer?.pause()
