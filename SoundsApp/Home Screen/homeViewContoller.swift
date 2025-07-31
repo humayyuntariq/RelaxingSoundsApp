@@ -67,7 +67,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         playerBar.backgroundColor = .clear
         playerImage.layer.cornerRadius = 5
         
-//        resetCoreDataStore() // Reset Core Data store for testing purposes
+        resetCoreDataStore() // Reset Core Data store for testing purposes
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         preloadSoundCollections(context: context)
         fetchSoundCollections(context: context)
@@ -222,8 +222,8 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     // MARK: Saving Data into CoreData
     func preloadSoundCollections(context: NSManagedObjectContext) {
         // This function will be used to preload sound collections from the database
-        let alreadyAdded = UserDefaults.standard.bool(forKey: "didPreloadCollections")
-            guard !alreadyAdded else { return }
+//        let alreadyAdded = UserDefaults.standard.bool(forKey: "didPreloadCollections")
+//            guard !alreadyAdded else { return }
         
         let rainCollection = MyCollection(context: context)
         rainCollection.name = "Rain & Thunder"
@@ -317,7 +317,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         
             let city02 = MySound(context: context)
             city02.name = "Traffic"
-            city02.fileName = "trafficSound"
+            city02.fileName = "traffic"
             city02.collectionTo = cityCollection
         
             let city03 = MySound(context: context)
@@ -379,7 +379,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         
         do {
             try context.save()
-       UserDefaults.standard.set(true, forKey: "didPreloadCollections")
+//       UserDefaults.standard.set(true, forKey: "didPreloadCollections")
 
         } catch {
             print("Error saving built-in sounds: \(error)")
