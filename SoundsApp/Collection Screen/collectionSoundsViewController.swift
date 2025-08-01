@@ -113,7 +113,7 @@ class collectionSoundsViewContoller: UIViewController, UITableViewDelegate, UITa
     @IBAction func backBtn(_ sender: Any) {
         //go to home screen
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "homeScreen") as! homeViewContoller
+        let vc = storyboard.instantiateViewController(withIdentifier: "home") 
         vc.modalPresentationStyle = .fullScreen
         vc.modalTransitionStyle = .crossDissolve
         present(vc, animated: true, completion: nil)

@@ -165,6 +165,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     
     
     //MARK: Collection View Data Source and Delegate Methods
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collectionSaved.count
     }
