@@ -67,7 +67,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         playerBar.backgroundColor = .clear
         playerImage.layer.cornerRadius = 5
         
-        resetCoreDataStore() // Reset Core Data store for testing purposes
+//        resetCoreDataStore() // Reset Core Data store for testing purposes
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         preloadSoundCollections(context: context)
         fetchSoundCollections(context: context)
@@ -222,19 +222,14 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
     // MARK: Saving Data into CoreData
     func preloadSoundCollections(context: NSManagedObjectContext) {
         // This function will be used to preload sound collections from the database
-//        let alreadyAdded = UserDefaults.standard.bool(forKey: "didPreloadCollections")
-//            guard !alreadyAdded else { return }
+        let alreadyAdded = UserDefaults.standard.bool(forKey: "didPreloadCollections")
+            guard !alreadyAdded else { return }
         
         let rainCollection = MyCollection(context: context)
         rainCollection.name = "Rain & Thunder"
         rainCollection.imageName = "rain"
         
          // Add sounds to Rain & Thunder collection
-            let rain01 = MySound(context: context)
-            rain01.name = "Open Window and Rain"
-            rain01.fileName = "openWindow"
-            rain01.collectionTo = rainCollection
-        
             let rain02 = MySound(context: context)
             rain02.name = "Light Rain"
             rain02.fileName = "LightRain"
@@ -343,7 +338,7 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         
             let meditation02 = MySound(context: context)
             meditation02.name = "Deep Meditation Music"
-            meditation02.fileName = "mindfulness"
+            meditation02.fileName = "deepMediationBody"
             meditation02.collectionTo = meditationCollection
         
             let meditation03 = MySound(context: context)
@@ -362,24 +357,79 @@ class homeViewContoller: UIViewController, UICollectionViewDataSource, UICollect
         sleepCollection.name = "Sleep & Calm"
         sleepCollection.imageName = "sleep"
         
+            let sleep01 = MySound(context: context)
+            sleep01.name = "Rising"
+            sleep01.fileName = "rising"
+            sleep01.collectionTo = sleepCollection
+        
+        
+            let sleep02 = MySound(context: context)
+            sleep02.name = "Jomon Grove"
+            sleep02.fileName = "JomonGrove"
+            sleep02.collectionTo = sleepCollection
+        
+        
+            let sleep03 = MySound(context: context)
+            sleep03.name = "Ghibili Station"
+            sleep03.fileName = "GhibliStation"
+            sleep03.collectionTo = sleepCollection
+            
+        
         let focusCollection = MyCollection(context: context)
         focusCollection.name = "Focus & Study"
         focusCollection.imageName = "study"
+        
+            let focus01 = MySound(context: context)
+            focus01.name = "Aftermath"
+            focus01.fileName = "Aftermath"
+            focus01.collectionTo = focusCollection
+        
+            let focus02 = MySound(context: context)
+            focus02.name = "Growth & Decay"
+            focus02.fileName = "growth"
+            focus02.collectionTo = focusCollection
+            
+            let focus03 = MySound(context: context)
+            focus03.name = "Kayak"
+            focus03.fileName = "Kayak"
+            focus03.collectionTo = focusCollection
+        
+
         
         let fireCollection = MyCollection(context: context)
         fireCollection.name = "Fire & Warmth"
         fireCollection.imageName = "fire"
         
+            let fire01 = MySound(context: context)
+            fire01.name = "Fire"
+            fire01.fileName = "Fire"
+            fire01.collectionTo = fireCollection
+        
+            let fire02 = MySound(context: context)
+            fire02.name = "Daytime Forest Bonfire"
+            fire02.fileName = "bonfire"
+            fire02.collectionTo = fireCollection
+        
+        
         let whiteNoiseCollection = MyCollection(context: context)
         whiteNoiseCollection.name = "White Noise"
         whiteNoiseCollection.imageName = "whiteNoise"
         
+            let noise01 = MySound(context: context)
+            noise01.name = "White Noise"
+            noise01.fileName = "whiteNoise"
+            noise01.collectionTo = whiteNoiseCollection
+        
+            let noise02 = MySound(context: context)
+            noise02.name = "Airplane Noise"
+            noise02.fileName = "Airplane"
+            noise02.collectionTo = whiteNoiseCollection
       
         
         
         do {
             try context.save()
-//       UserDefaults.standard.set(true, forKey: "didPreloadCollections")
+       UserDefaults.standard.set(true, forKey: "didPreloadCollections")
 
         } catch {
             print("Error saving built-in sounds: \(error)")
